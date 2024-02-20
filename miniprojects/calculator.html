@@ -1,0 +1,202 @@
+<html>
+    <head>
+        <title>Calculator App</title></head>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: blanchedalmond;
+            height:100vh;
+            margin:0;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            font-weight: bolder;
+        }
+        .Calculator{
+            border:1px solid black;
+            background-color:cadetblue;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 0px 40px rgba(96, 97, 95, 0.805);
+        }
+        .display{
+            border:1px solid black;
+            background-color: cadetblue;
+            text-align: right;
+            color:white;
+            padding: 10px;
+        }
+        .buttons{
+            gap:5px;
+            padding: 10px;
+            grid-template-columns:repeat(4,1fr);
+            display: grid;
+            /* border:2px solid black; */
+
+        }
+        button{
+            border:2px solid black;
+            box-shadow:4px 4px 5px black;
+
+            background-color:gray;
+            color: black;
+            font-size: 1.5em;
+            /* border: none; */
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 50px 50px;
+        }
+        button:hover{
+            background-color: rgb(189, 187, 184);
+        }
+        input[type="text"]{
+            width: 100%;
+            padding: 10px;
+            color:black;
+            text-align: right;
+            font-size: 1.5rem;
+            border:2px solid black;
+
+        }
+        .clear{
+            grid-column: span 2;
+        }
+        .calculate{
+            grid-column: span 2;
+        }
+        .calculate:hover{
+            background-color:blue;
+        }
+        .decimal{
+            grid-column: span 2;
+        }
+        .clear:hover{
+            background-color:rgba(211, 52, 52, 0.919);
+        }
+        /* .backbutton{
+            justify-content: end;
+            align-items: end;
+        } */
+    </style>
+    <body>
+        <div class="Calculator">
+            <div class="display">
+                <input type="text" id="result" disabled>
+            </div>
+            <div class="buttons">
+                <button class="operator">+</button>
+                <button class="operator">-</button>
+                <button class="operator">*</button>
+                <button class="operator">/</button>
+                <button>9</button>
+                <button>8</button>
+                <button>7</button>
+                <button>6</button>
+                <button>2</button>
+                <button>3</button>
+                <button>4</button>
+                <button>5</button>
+                <button>1</button>
+                <button class="zero">0</button>
+                <button class="decimal">.</button>
+                <button class="clear">Clear</button>
+                <button class="calculate">=</button>
+            </div>
+        </div>
+        <!-- other file link -->
+        <!-- <div class="backbutton">
+        <a href="home.html">Back</a>
+        </div> -->
+        <script>
+            const result=document.getElementById("result");
+            const buttons=document.querySelectorAll("button");
+            let currentInput="";
+            let operator="";
+            let priviousValue=null;
+            let isPriviousOperator=false;
+
+            buttons.forEach((button)=>
+            {
+                button.addEventListener("click",()=>
+                {
+                    const value=button.textContent;
+                    if(!isNaN(value) || value === "."){
+                        handleNumberClick(value);
+                    }
+                    else if(value ==="+" ||value ==="-" ||value ==="*" ||value ==="/"){
+                        handleOperatorClick(value);
+
+                    }
+                    else if(value ==="="){
+                        handleEqualsClick();
+
+                    }
+                    else if(value === "Clear"){
+                        clear();
+                    }
+                });
+            });
+
+            function handleNumberClick(number){
+                if(isPriviousOperator)
+                {
+                    currentInput="";
+                    isPriviousOperator=false;
+                }
+                currentInput +=number;
+                updateDisplay();
+            }
+            function handleOperatorClick(selectedOPerator){
+                if(currentInput !=="" && priviousValue !== null){
+                    calculate();
+                }
+                operator =selectedOPerator;
+                priviousValue=parseFloat(currentInput);
+                isPriviousOperator=true;
+            }
+            function handleEqualsClick(){
+                if(operator && priviousValue !==null){
+                    calculate();
+                    operator="";
+                }
+            }
+            function calculate()
+            {
+                const currentValue=parseFloat(currentInput);
+                switch(operator)
+                {
+                    case "+":
+                        priviousValue +=currentValue;
+                    break;
+                    case "-":
+                        priviousValue -=currentValue;
+                    break;
+                    case "*":
+                        priviousValue *=currentValue;
+                    break;
+                    case "/":
+                        priviousValue /=currentValue;
+                    break;
+                    default:
+                        priviousValue=currentValue;
+                }
+                currentInput =priviousValue.toString();
+                updateDisplay();
+                isPriviousOperator=true;
+            }
+            function clear()
+            {
+                currentInput="";
+                operator="";
+                priviousValue=null;
+                isPriviousValue=false;
+                updateDisplay();
+            }
+            function updateDisplay()
+            {
+                result.value=currentInput || "0";
+            }
+        </script>
+    </body>
+</html>
